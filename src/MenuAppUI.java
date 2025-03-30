@@ -18,7 +18,12 @@ public class MenuAppUI {
 
         boolean exitUI = false;
 
+
         while (!exitUI) {
+
+            orderManager.updatePizzaProductionSequence(true, true);
+
+
             System.out.println("\n******************** Hovedmenu ********************");
             System.out.printf(layoutFormatStringMenuLevel1, "1. Vis menukort", "5. Rediger menu");
             System.out.printf(layoutFormatStringMenuLevel1, "2. Opret ordre", "6. Se statistik");
@@ -83,6 +88,7 @@ public class MenuAppUI {
         boolean goBack = false;
 
         while (!goBack) {
+
             System.out.println("\n1. Udlever ordre ud fra telefonnummer");
             System.out.println("2. Vis telefonnumre på ordre der er klar til afhentning");
             System.out.println("3. Se alle uafsluttede ordre for dagen");

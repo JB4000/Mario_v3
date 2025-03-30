@@ -20,7 +20,7 @@ public class FileByteManager {
 
     public ArrayList<Order> readArrayListFromFile() throws IOException, ClassNotFoundException {
 
-        ArrayList<Order> tempOrderTypeArrayList = new ArrayList<Order>();
+        ArrayList<Order> tempOrderTypeArrayList = new ArrayList<>();
 
         File file = new File(fileName);
         if (file.length() > bytesInEmptyFile) {
@@ -28,7 +28,18 @@ public class FileByteManager {
             FileInputStream fileStreamIn = new FileInputStream(fileName);
             ObjectInputStream fileObjectStreamIn = new ObjectInputStream(fileStreamIn);
 
-            tempOrderTypeArrayList = (ArrayList<Order>) fileObjectStreamIn.readObject();
+            if (appendByteFile) {
+                while (true) {
+                    try {
+                        Order order = (Order) fileObjectStreamIn.readObject();
+                        tempOrderTypeArrayList.add(order);
+                    } catch (EOFException e) {
+                        break;
+                    }
+                }
+            } else {
+                tempOrderTypeArrayList = (ArrayList<Order>) fileObjectStreamIn.readObject();
+            }
 
             fileStreamIn.close();
             fileObjectStreamIn.close();
@@ -46,7 +57,9 @@ public class FileByteManager {
                     new ObjectOutputStream(fileStreamOut) :
                     new AppendObjectOutputStream(fileStreamOut);
 
-            fileObjectStreamOutAppend.writeObject(tempOrderTypeArrayList);
+            for (Order order : tempOrderTypeArrayList) {
+                fileObjectStreamOutAppend.writeObject(order);
+            }
 
             fileObjectStreamOutAppend.close();
 

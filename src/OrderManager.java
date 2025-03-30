@@ -111,7 +111,7 @@ public class OrderManager {
     }
 
     public void loadOrdersInThePast() throws IOException, ClassNotFoundException {
-        ordersInThePastFile.readArrayListFromFile();
+        ordersInThePast = ordersInThePastFile.readArrayListFromFile();
     }
 
     public void saveOrdersInThePast() throws IOException {
@@ -522,7 +522,7 @@ public class OrderManager {
 
             printHistogramFrequencyOfFromListOfOrders(completedOrdersOfToday);
         } else {
-            System.out.println("Der er endnu ingen afsluttede ordrer i dag, så ingen omsætning");
+            System.out.println("Der er endnu ingen afsluttede ordrer i dag, så ingen omsætning\n");
         }
     }
 
