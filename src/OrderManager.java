@@ -230,6 +230,8 @@ public class OrderManager {
 
                         if (tempChoice != 0) {
                             order.getPizzasOfThisOrder().remove(tempChoice - 1);
+                            order.updateTotalPriceOrder();
+
                         }
                     }
 
@@ -354,25 +356,33 @@ public class OrderManager {
             if (activeOrdersOfToday.get(i).getPhoneNumberCustomer().matches(soegTlfNummer)) {
                 System.out.println("Resultat fundet: " + activeOrdersOfToday.get(i).getPhoneNumberCustomer());
                 System.out.println(activeOrdersOfToday.get(i));
-                System.out.println("Bekræft betaling (1) ja, (2) slet ordren (3) tilbage: ");
 
-                int valg = Utility.getChoiceIntValidated(1, 3, false, scanner);
+                if (activeOrdersOfToday.get(i).anyUnfinishedPizzasInOrder()) {
+                    System.out.println("Ikke klar til udlevering endnu. Ordren er ikke faerdig.");
+                    System.out.println("Indtast hvad som helst for at vende tilbage til menu");
+                    scanner.nextLine();
+                } else {
 
-                if (valg ==1) {
-                    activeOrdersOfToday.get(i).setOrderIsCompleted(true);
-                    completedOrdersOfToday.add(activeOrdersOfToday.remove(i));
-                    System.out.println("Betaling gennemført, udlever ordre");
+                    System.out.println("Bekræft betaling (1) ja, (2) slet ordren (3) tilbage: ");
 
-                    saveActiveAndCompletedOrdersToFile();
+                    int valg = Utility.getChoiceIntValidated(1, 3, false, scanner);
 
-                } else if (valg ==2){
-                    System.out.println("Betaling afbrudt");
-                    activeOrdersOfToday.remove(i);
+                    if (valg ==1) {
+                        activeOrdersOfToday.get(i).setOrderIsCompleted(true);
+                        completedOrdersOfToday.add(activeOrdersOfToday.remove(i));
+                        System.out.println("Betaling gennemført, udlever ordre");
 
-                    saveActiveAndCompletedOrdersToFile();
+                        saveActiveAndCompletedOrdersToFile();
 
-                } else if(valg ==3) {
-                    break;
+                    } else if (valg ==2){
+                        System.out.println("Betaling afbrudt");
+                        activeOrdersOfToday.remove(i);
+
+                        saveActiveAndCompletedOrdersToFile();
+
+                    } else if(valg ==3) {
+                        break;
+                    }
                 }
             } else {
                 System.out.println("Telefonnummeret findes ikke på listen");
@@ -509,8 +519,8 @@ public class OrderManager {
 
         double totalRevenueOfToday = 0;
 
-        for (Order ordre : completedOrdersOfToday) {
-            totalRevenueOfToday += ordre.getTotalPriceOfOrder();
+        for (Order order : completedOrdersOfToday) {
+            totalRevenueOfToday += order.getTotalPriceOfOrder();
         }
         return totalRevenueOfToday;
     }
@@ -694,4 +704,6 @@ public class OrderManager {
             order.setDateTimeOrderPickup(tempDateTimeOrderPickup);
         }
     }
+
+
 }

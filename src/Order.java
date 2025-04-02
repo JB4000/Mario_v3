@@ -136,4 +136,16 @@ public class Order implements Serializable {
         tempString.append("\n---------------------------------------------------------------------------------------------------------------------------------------------\n");
         return tempString.toString();
     }
+
+    public boolean anyUnfinishedPizzasInOrder() {
+
+        boolean flagUnfinishedPizzasThisOrder = false;
+
+        for (int i = 0; i < pizzasOfThisOrder.size(); i++) {
+            if (!pizzasOfThisOrder.get(i).getPizzaIsReadyForPickup()) {
+                flagUnfinishedPizzasThisOrder = true;
+            }
+        }
+        return flagUnfinishedPizzasThisOrder;
+    }
 }
